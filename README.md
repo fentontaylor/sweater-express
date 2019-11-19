@@ -1,74 +1,104 @@
-# All your Express base are belong to us
+# Sweater Weather Express
 
-[![Build Status](https://travis-ci.com/turingschool-examples/all-your-base.svg?branch=master)](https://travis-ci.com/turingschool-examples/all-your-base)
+## Table of Contents
+1. [Introduction](#introduction)
+1. [Initial Setup](#setup)
+1. [How to Run Tests](#tests)
+1. [API Documentation](#api_docs)
+1. [Schema Design](#schema)
+1. [Tech Stack](#stack)
+1. [Contributors](#contributors)
 
-## Getting started
-To use this repo, you’ll need to `fork` the repo as your own. Once you have done that, you’ll need to run the following command below to get everything up and running. 
+## Introduction <a name="introduction"></a>
+[Production Link](https://sweater-express.herokuapp.com/)
 
-#### Installing necessary dependencies
-The easiest way to get started is to run the following command. This will pull down any necessary dependencies that your app will require. You can think of this command as something incredibly similar to `bundle install` in Rails. 
+## Initial Setup <a name="setup"></a>
 
-`npm install`
+## How to Run Tests <a name="tests"></a>
 
-#### Set up your local database
-You’ll need to figure out a name for your database. We suggest calling it something like `sweater_weather_dev`.  
+## API Documentation <a name="api_docs"></a>
 
-To get things set up, you’ll need to access your Postgres instance by typing in `psql` into your terminal. Once there, you can create your database by running the comment `CREATE DATABASE PUT_DATABASE_NAME_HERE_dev;`. 
-
-Now you have a database for your new project.
-
-#### Migrations
-Once you have your database setup, you’ll need to run some migrations (if you have any). You can do this by running the following command: 
-
-`knex migrate:latest`
-
-
-Instructions to create database, run migrations, and seed: 
+### All Requests
+- Every request must include the API key in the JSON body of the request with the key "api_key".
+**Example**
 ```
-psql
-CREATE DATABASE DATABASE_NAME_dev;
-\q
-
-knex migrate:latest
-knex seed:run
+body:
+{
+  "api_key": "jgn983hy48thw9begh98h4539h4"
+}
 ```
+- If no API key or an incorrect key is provided you will get a 401 (Unauthorized) with an error message.
 
-#### Set up your test database
-Most of the setup is going to be same as the one you did before. You’ll notice one small difference with setting the environment flag to `test`.  
-
+- All requests should include the following headers:
 ```
-psql
-CREATE DATABASE DATABASE_NAME_test;
-\q
-
-knex migrate:latest --env test
+Content-Type: application/json
+Accept: application/json
 ```
 
-## Running your tests
-Running tests are simple and require you to run the following command below: 
-
-`npm test`
-
-When the tests have completed, you’ll get a read out of how things panned out. The tests will be a bit more noisy than what you’re used to, so be prepared. 
-
-## Setting up your production environment
-This repo comes with a lot of things prepared for you. This includes production ready configuration. To get started, you’ll need to do a few things. 
-
-- Start a brand new app on the Heroku dashboard 
-- Add a Postgres instance to your new Heroku app
-- Find the URL of that same Postgres instance and copy it. It should look like a long url. It may look something like like `postgres://sdflkjsdflksdf:9d3367042c8739f3...`.
-- Update your `knexfile.js` file to use your Heroku database instance. You’ll see a key of `connection` with a value of an empty string. This is where you’ll paste your new Postgres instance URL. 
-
-Once you’ve set all of that up, you’ll need to `add the remote` to your new app. This should work no differently than how you’ve done it with any Rails project. Adding this remote will allow you to run `git push heroku master`. 
-
-Once you’ve done that, you’ll need to `bash` into your Heroku instance and get some things set up. 
-
-- Run the following commands to get started:
+### Forecast Request
 ```
-heroku run bash
-npm install
-nom install -g knex
-knex migrate:latest
+```
+Provides current weather, hourly forecast for the next 8 hours, and daily forecast for the next 7 days.
+#### Example
+```
 ```
 
-This will install any dependencies, install Knex, and migrate any changes that you’ve made to the database. 
+### Add Favorites Request
+```
+POST /api/v1/favorites
+```
+Add favorite location for the user. If successful, the JSON response (status 200) will include a message verifying that the location was added to your favorites. To avoid creating duplicate records, the JSON response (status 409) will include a message that notifies the user that a location is already in their favorites if they try to add it again. 
+#### Example
+```
+POST /api/v1/favorites
+Content-Type: application/json
+Accept: application/json
+
+body:
+
+{
+  "location": "Denver, CO",
+  "api_key": "jgn983hy48thw9begh98h4539h4"
+}
+```
+**Success Response:**
+```
+status: 200
+body:
+
+{
+  "message": "Denver, CO has been added to your favorites",
+}
+```
+**Error Response:**
+```
+status: 409
+body:
+
+{
+  "message": "Denver, CO is already in your favorites",
+}
+```
+
+### Delete Favorites Request
+```
+```
+details
+#### Example
+```
+```
+
+### Favorite Location Forecast Request
+```
+```
+details
+#### Example
+```
+```
+
+## Schema Design <a name="schema"></a>
+
+## Tech Stack <a name="stack"></a>
+
+## Contributors <a name="stack"></a>
+
