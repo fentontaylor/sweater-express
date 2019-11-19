@@ -20,14 +20,27 @@ router.post('/', (request, response) => {
   var key = request.body.api_key;
   var location = request.body.location;
 
+  if (!key) { return response.status(401).send({ error: 'Invalid or missing API key' })}
+
   database('users').where('api_key', key)
     .then(user => {
-      return database('favorites').insert({
-        user_id: user[0].id, location: location
-      })
-    })
-    .then(() => {
-      response.status(200).json({ message: `${location} has been added to your favorites`})
+      if (user.length) {
+        database('favorites').where({user_id: user[0].id, location: location})
+          .then(favorite => {
+            if (!favorite.length) {
+              return database('favorites').insert({
+                user_id: user[0].id, location: location
+              })
+              .then(() => {
+                response.status(200).json({ message: `${location} has been added to your favorites` })
+              })
+            } else {
+              return response.status(409).json({ message: `${location} already in your favorites`})
+            };
+          })
+      } else {
+        return response.status(401).send({ error: 'Invalid or missing API key' })
+      };
     })
 });
 
