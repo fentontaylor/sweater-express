@@ -38,10 +38,16 @@ router.post('/', (request, response) => {
               return response.status(409).json({ message: `${location} already in your favorites`})
             };
           })
+          .catch((error) => {
+            response.status(500).json({ error });
+          });
       } else {
         return response.status(401).send({ error: 'Invalid or missing API key' })
       };
     })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 });
 
 module.exports = router;
