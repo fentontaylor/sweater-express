@@ -1,6 +1,6 @@
-#Sweater Weather Express
+# Sweater Weather Express
 
-##Table of Contents
+## Table of Contents
 1. [Introduction](#introduction)
 1. [Initial Setup](#setup)
 1. [How to Run Tests](#tests)
@@ -18,7 +18,7 @@
 
 ## API Documentation <a name="api_docs"></a>
 
-###All Requests
+### All Requests
 - Every request must include the API key in the JSON body of the request with the key "api_key".
 **Example**
 ```
@@ -35,20 +35,20 @@ Content-Type: application/json
 Accept: application/json
 ```
 
-###Forecast Request
+### Forecast Request
 ```
 ```
 Provides current weather, hourly forecast for the next 8 hours, and daily forecast for the next 7 days.
-####Example
+#### Example
 ```
 ```
 
-###Add Favorites Request
+### Add Favorites Request
 ```
 POST /api/v1/favorites
 ```
 Add favorite location for the user. If successful, the JSON response (status 200) will include a message verifying that the location was added to your favorites. To avoid creating duplicate records, the JSON response (status 409) will include a message that notifies the user that a location is already in their favorites if they try to add it again. 
-####Example
+#### Example
 ```
 POST /api/v1/favorites
 Content-Type: application/json
@@ -80,19 +80,19 @@ body:
 }
 ```
 
-###Delete Favorites Request
+### Delete Favorites Request
 ```
 ```
 details
-####Example
+#### Example
 ```
 ```
 
-###Favorite Location Forecast Request
+### Favorite Location Forecast Request
 ```
 ```
 details
-####Example
+#### Example
 ```
 ```
 
