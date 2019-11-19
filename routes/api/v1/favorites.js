@@ -35,7 +35,7 @@ router.post('/', (request, response) => {
                 response.status(200).json({ message: `${location} has been added to your favorites` })
               })
             } else {
-              return response.status(409).json({ message: `${location} already in your favorites`})
+              return response.status(409).json({ message: `${location} is already in your favorites`})
             };
           })
           .catch((error) => {
