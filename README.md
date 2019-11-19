@@ -20,6 +20,7 @@
 
 ### All Requests
 - Every request must include the API key in the JSON body of the request with the key "api_key".
+
 **Example**
 ```
 body:
