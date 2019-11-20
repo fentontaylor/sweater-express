@@ -42,7 +42,7 @@ router.post('/', (request, response) => {
   var key = request.body.api_key;
   var location = request.body.location;
 
-  if (!key) response.status(401).send({ error: 'Invalid or missing API key' })
+  if (!key) { return response.status(401).send({ error: 'Invalid or missing API key' }) }
 
   findUser(key)
     .then(user => {
