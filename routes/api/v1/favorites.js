@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const helpers = require('../../../helpers/asyncHelpers')
-const findUser = helpers.findUser
-const findFavorite = helpers.findFavorite
-const createFavorite = helpers.createFavorite
+const helpers = require('../../../helpers/asyncHelpers');
+const findUser = helpers.findUser;
+const findFavorite = helpers.findFavorite;
+const createFavorite = helpers.createFavorite;
 
 router.get('/', (request, response) => {
   
