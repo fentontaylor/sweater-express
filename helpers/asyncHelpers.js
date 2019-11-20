@@ -52,7 +52,7 @@ async function fetchForecast (latLong) {
   try {
     let key = process.env.DARKSKY_KEY;
     let coords = `${latLong.lat},${latLong.lng}`;
-    let url = `https://api.darksky.net/forecast/${key}/${coords}?exclude=minutely`;
+    let url = `https://api.darksky.net/forecast/${key}/${coords}?exclude=minutely,flags`;
 
     let response = await fetch(url);
 
