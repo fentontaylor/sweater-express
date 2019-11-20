@@ -14,7 +14,13 @@ router.get('/', (request, response) => {
         .then(forecast => {
           response.status(200).send(forecast)
         })
+        .catch((error) => {
+          response.status(500).json({ error });
+        });
     })
+    .catch((error) => {
+      response.status(500).json({ error });
+    });
 })
 
 module.exports = router;
