@@ -1,0 +1,36 @@
+const express = require('express');
+const router = express.Router();
+
+const helpers = require('../../../helpers/asyncHelpers');
+const fetchGeolocation = helpers.fetchGeolocation;
+const fetchForecast = helpers.fetchForecast;
+const findUser = helpers.findUser;
+
+router.get('/', (request, response) => {
+  var location = request.query.location;
+  var key = request.body.api_key;
+
+  if (!key) { return response.status(401).send({ error: 'Invalid or missing API key' }) }
+
+  findUser(key).then(user => {
+    if (user.length) {
+      fetchGeolocation(location)
+        .then(latLong => {
+          fetchForecast(latLong)
+            .then(forecast => {
+              response.status(200).send(forecast)
+            })
+            .catch((error) => {
+              response.status(500).send({ error });
+            });
+        })
+        .catch((error) => {
+          response.status(500).send({ error });
+        });
+    } else {
+      response.status(401).send({ error: 'Invalid or missing API key' })
+    }
+  })
+})
+
+module.exports = router;
