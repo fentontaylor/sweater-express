@@ -1,6 +1,9 @@
+require('dotenv').config()
+
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
+const fetch = require('node-fetch');
 
 async function findUser(apiKey) {
   try {
@@ -31,8 +34,30 @@ async function createFavorite(user, location) {
   }
 }
 
+async function fetchGeolocation(location) {
+  let key = process.env.GOOGLE_KEY;
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${key}`;
+
+  let response = await fetch(url);
+  let json = await response.json();
+
+  return json.results[0].geometry.location;
+}
+
+async function fetchForecast(latLong) {
+  let key = process.env.DARKSKY_KEY;
+  let coords = `${latLong.lat},${latLong.lng}`;
+  let url = `https://api.darksky.net/forecast/${key}/${coords}?exclude=minutely`;
+
+  let response = await fetch(url)
+
+  return response.json()
+}
+
 module.exports = {
   findUser: findUser,
   findFavorite: findFavorite,
-  createFavorite: createFavorite
+  createFavorite: createFavorite,
+  fetchGeolocation: fetchGeolocation,
+  fetchForecast: fetchForecast
 }
