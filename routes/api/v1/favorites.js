@@ -5,15 +5,19 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../../../knexfile')[environment];
 const database = require('knex')(configuration);
 
+async function findUser(apiKey) {
+  let user = await database('users').where('api_key', apiKey);
+  return user;
+}
+
+async function findFavorite(user, location) {
+  let favorite = await database('favorites')
+    .where({ user_id: user[0].id, location: location })
+  return favorite;
+}
 
 router.get('/', (request, response) => {
-  database('favorites').select()
-    .then((favorites) => {
-      response.status(200).json(favorites);
-    })
-    .catch((error) => {
-      response.status(500).json({ error });
-    });
+  
 });
 
 router.post('/', (request, response) => {
@@ -22,10 +26,10 @@ router.post('/', (request, response) => {
 
   if (!key) { return response.status(401).send({ error: 'Invalid or missing API key' })}
 
-  database('users').where('api_key', key)
+  findUser(key)
     .then(user => {
       if (user.length) {
-        database('favorites').where({user_id: user[0].id, location: location})
+        findFavorite(user, location)
           .then(favorite => {
             if (!favorite.length) {
               return database('favorites').insert({
