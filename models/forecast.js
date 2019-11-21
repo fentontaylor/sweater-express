@@ -1,5 +1,6 @@
 const Currently = require('./currently')
 const Daily = require('./daily')
+const Hourly = require('./hourly')
 
 class Forecast {
   constructor(city, forecast) {
@@ -10,16 +11,13 @@ class Forecast {
   }
 
   dailyForecast(fc) {
-    let dailyData = fc.data.slice(0, 7)
-    return dailyData.map(data => new this.daily(data))
+    let dailyData = fc.data.slice(0, 7);
+    return dailyData.map(data => new Daily(data));
   }
 
   hourlyForecast(fc) {
-    return {
-      summary: fc.summary,
-      icon: fc.icon,
-      data: fc.data.slice(0,8)
-    }
+    let hourlyData = fc.data.slice(0,8);
+    return hourlyData.map(data => new Hourly(data));
   }
 }
 
