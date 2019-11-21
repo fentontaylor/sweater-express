@@ -4,7 +4,8 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 const fetch = require('node-fetch');
-const favForecast = require('../models/favForecast')
+const FavForecast = require('../models/favForecast');
+const Forecast = require('../models/forecast');
 
 async function findUser (apiKey) {
   try {
@@ -66,7 +67,7 @@ async function fetchGeolocation (location) {
 
 async function fetchForecast (location) {
   try {
-    var latLong = await fetchGeolocation(location);
+    let latLong = await fetchGeolocation(location);
     let key = process.env.DARKSKY_KEY;
     let coords = `${latLong.lat},${latLong.lng}`;
     let url = `https://api.darksky.net/forecast/${key}/${coords}?exclude=minutely,flags,offset`;
@@ -74,6 +75,15 @@ async function fetchForecast (location) {
     let response = await fetch(url);
 
     return response.json();
+  } catch (e) {
+    return e;
+  }
+}
+
+async function formattedForecast (city) {
+  try {
+    let forecast = await fetchForecast(city);
+    return new Forecast(city, forecast);
   } catch (e) {
     return e;
   }
@@ -91,7 +101,7 @@ async function fetchFavoriteForecasts(user) {
     var forecasts = [];
     await _asyncForEach(cities, async (city) => {
       let fc = await fetchForecast(city)
-      let fav = new favForecast(city, fc)
+      let fav = new FavForecast(city, fc)
       forecasts.push(fav)
     });
     return forecasts;
@@ -108,5 +118,6 @@ module.exports = {
   fetchForecast: fetchForecast,
   deleteFavorite: deleteFavorite,
   userFavoriteCities: userFavoriteCities,
-  fetchFavoriteForecasts: fetchFavoriteForecasts
+  fetchFavoriteForecasts: fetchFavoriteForecasts,
+  formattedForecast: formattedForecast
 }
