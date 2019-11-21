@@ -6,8 +6,9 @@ const findUser = helpers.findUser;
 const findFavorite = helpers.findFavorite;
 const createFavorite = helpers.createFavorite;
 const deleteFavorite = helpers.deleteFavorite;
-const userFavoriteCities = helpers.userFavoriteCities;
-const fetchForecast = helpers.fetchForecast;
+const fetchFavoriteForecasts = helpers.fetchFavoriteForecasts;
+// const userFavoriteCities = helpers.userFavoriteCities;
+// const fetchForecast = helpers.fetchForecast;
 
 router.get('/', (request, response) => {
   var key = request.body.api_key
@@ -18,15 +19,8 @@ router.get('/', (request, response) => {
   findUser(key)
     .then(user => {
       if(user.length) {
-        userFavoriteCities(user)
-          .then(cities => {
-            cities.forEach(city => {
-              fetchForecast(city)
-                .then(fc => forecasts.push(fc))
-                .then(response.status(200).send(forecasts))
-                .catch(error => response.status(500).send({ error }));
-            })
-          })
+        fetchFavoriteForecasts(user)
+        
       } else {
         response.status(401).send({ error: 'Invalid or missing API key' })
       };
