@@ -66,9 +66,16 @@ router.delete('/', (request, response) => {
   findUser(key)
   .then(user => {
     if (user.length) {
-      deleteFavorite(user, location)
-      .then(response.status(204).send())
-      .catch(error => response.status(500).send({ error }))
+      findFavorite(user, location)
+      .then(favorite => {
+        if (favorite.length) {
+          deleteFavorite(user, location)
+          .then(response.status(204).send())
+          .catch(error => response.status(500).send({ error }))
+        } else {
+          response.status(401).send({ error: 'Invalid or missing API key' })
+        }
+      })
     } else {
       response.status(401).send({ error: 'Invalid or missing API key' })
     }
