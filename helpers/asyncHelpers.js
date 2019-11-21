@@ -55,8 +55,9 @@ async function fetchGeolocation (location) {
   }
 }
 
-async function fetchForecast (latLong) {
+async function fetchForecast (location) {
   try {
+    var latLong = await fetchGeolocation(location)
     let key = process.env.DARKSKY_KEY;
     let coords = `${latLong.lat},${latLong.lng}`;
     let url = `https://api.darksky.net/forecast/${key}/${coords}?exclude=minutely,flags,offset`;

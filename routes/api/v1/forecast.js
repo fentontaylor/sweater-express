@@ -14,15 +14,9 @@ router.get('/', (request, response) => {
 
   findUser(key).then(user => {
     if (user.length) {
-      fetchGeolocation(location)
-        .then(latLong => {
-          fetchForecast(latLong)
-            .then(forecast => {
-              response.status(200).send(forecast)
-            })
-            .catch((error) => response.status(500).send({ error }));
-        })
-        .catch((error) => response.status(500).send({ error }));
+      fetchForecast(location)
+        .then(forecast => response.status(200).send(forecast))
+        .catch(error => response.status(500).send({ error: error }));
     } else {
       response.status(401).send({ error: 'Invalid or missing API key' })
     }
