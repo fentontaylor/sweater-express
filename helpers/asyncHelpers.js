@@ -41,6 +41,14 @@ async function deleteFavorite(user, location) {
   }
 }
 
+async function userFavoriteCities(user) {
+  try {
+    return await database('favorites').where({user_id: user[0].id}).pluck('location')
+  } catch (e) {
+    return e;
+  }
+}
+
 async function fetchGeolocation (location) {
   try {
     let key = process.env.GOOGLE_KEY;
@@ -57,7 +65,7 @@ async function fetchGeolocation (location) {
 
 async function fetchForecast (location) {
   try {
-    var latLong = await fetchGeolocation(location)
+    var latLong = await fetchGeolocation(location);
     let key = process.env.DARKSKY_KEY;
     let coords = `${latLong.lat},${latLong.lng}`;
     let url = `https://api.darksky.net/forecast/${key}/${coords}?exclude=minutely,flags,offset`;
@@ -70,11 +78,21 @@ async function fetchForecast (location) {
   }
 }
 
+async function fetchFavoriteForecasts(user) {
+  try {
+    var cities = await userFavoriteCities(user);
+  } catch (e) {
+    return e;
+  }
+}
+
 module.exports = {
   findUser: findUser,
   findFavorite: findFavorite,
   createFavorite: createFavorite,
   fetchGeolocation: fetchGeolocation,
   fetchForecast: fetchForecast,
-  deleteFavorite: deleteFavorite
+  deleteFavorite: deleteFavorite,
+  userFavoriteCities: userFavoriteCities,
+  fetchFavoriteForecasts: fetchFavoriteForecasts
 }

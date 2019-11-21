@@ -6,9 +6,32 @@ const findUser = helpers.findUser;
 const findFavorite = helpers.findFavorite;
 const createFavorite = helpers.createFavorite;
 const deleteFavorite = helpers.deleteFavorite;
+const userFavoriteCities = helpers.userFavoriteCities;
+const fetchForecast = helpers.fetchForecast;
 
 router.get('/', (request, response) => {
-  
+  var key = request.body.api_key
+  var forecasts = [];
+
+  if (!key) { return response.status(401).send({ error: 'Invalid or missing API key' }) }
+
+  findUser(key)
+    .then(user => {
+      if(user.length) {
+        userFavoriteCities(user)
+          .then(cities => {
+            cities.forEach(city => {
+              fetchForecast(city)
+                .then(fc => forecasts.push(fc))
+                .then(response.status(200).send(forecasts))
+                .catch(error => response.status(500).send({ error }));
+            })
+          })
+      } else {
+        response.status(401).send({ error: 'Invalid or missing API key' })
+      };
+    })
+    .catch(error => response.status(500).send({ error }));
 });
 
 router.post('/', (request, response) => {
@@ -31,16 +54,12 @@ router.post('/', (request, response) => {
               response.status(409).send({ message: `${location} is already in your favorites`})
             };
           })
-          .catch((error) => {
-            response.status(500).send({ error });
-          });
+          .catch(error => response.status(500).send({ error: error }));
       } else {
         response.status(401).send({ error: 'Invalid or missing API key' })
       };
     })
-    .catch((error) => {
-      response.status(500).send({ error });
-    });
+    .catch(error => response.status(500).send({ error: error }));
 });
 
 router.delete('/', (request, response) => {
