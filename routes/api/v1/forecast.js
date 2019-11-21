@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const helpers = require('../../../helpers/asyncHelpers');
-const fetchForecast = helpers.fetchForecast;
+const formattedForecast = helpers.formattedForecast;
 const findUser = helpers.findUser;
 
 router.get('/', (request, response) => {
@@ -14,7 +14,7 @@ router.get('/', (request, response) => {
   findUser(key)
   .then(user => {
     if (user.length) {
-      fetchForecast(location)
+      formattedForecast(location)
       .then(forecast => response.status(200).send(forecast))
       .catch(error => response.status(500).send({ error: error }));
     } else {
