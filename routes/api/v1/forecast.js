@@ -3,7 +3,6 @@ const router = express.Router();
 
 const helpers = require('../../../helpers/asyncHelpers');
 const formattedForecast = helpers.formattedForecast;
-const fetchForecast = helpers.fetchForecast;
 const findUser = helpers.findUser;
 
 router.get('/', (request, response) => {

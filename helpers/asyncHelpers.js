@@ -43,7 +43,7 @@ async function deleteFavorite(user, location) {
   }
 }
 
-async function userFavoriteCities(user) {
+async function _userFavoriteCities(user) {
   try {
     return await database('favorites').where({user_id: user[0].id}).pluck('location')
   } catch (e) {
@@ -51,7 +51,7 @@ async function userFavoriteCities(user) {
   }
 }
 
-async function fetchGeolocation (location) {
+async function _fetchGeolocation (location) {
   try {
     let key = process.env.GOOGLE_KEY;
     let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${key}`;
@@ -65,9 +65,9 @@ async function fetchGeolocation (location) {
   }
 }
 
-async function fetchForecast (location) {
+async function _fetchForecast (location) {
   try {
-    let latLong = await fetchGeolocation(location);
+    let latLong = await _fetchGeolocation(location);
     let key = process.env.DARKSKY_KEY;
     let coords = `${latLong.lat},${latLong.lng}`;
     let url = `https://api.darksky.net/forecast/${key}/${coords}?exclude=minutely,flags,offset`;
@@ -82,7 +82,7 @@ async function fetchForecast (location) {
 
 async function formattedForecast (city) {
   try {
-    let forecast = await fetchForecast(city);
+    let forecast = await _fetchForecast(city);
     return new Forecast(city, forecast);
   } catch (e) {
     return e;
@@ -97,10 +97,10 @@ async function _asyncForEach(array, callback) {
 
 async function fetchFavoriteForecasts(user) {
   try {
-    var cities = await userFavoriteCities(user);
+    var cities = await _userFavoriteCities(user);
     var forecasts = [];
     await _asyncForEach(cities, async (city) => {
-      let fc = await fetchForecast(city)
+      let fc = await _fetchForecast(city)
       let fav = new FavForecast(city, fc)
       forecasts.push(fav)
     });
@@ -114,10 +114,7 @@ module.exports = {
   findUser: findUser,
   findFavorite: findFavorite,
   createFavorite: createFavorite,
-  fetchGeolocation: fetchGeolocation,
-  fetchForecast: fetchForecast,
   deleteFavorite: deleteFavorite,
-  userFavoriteCities: userFavoriteCities,
   fetchFavoriteForecasts: fetchFavoriteForecasts,
   formattedForecast: formattedForecast
 }
