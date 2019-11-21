@@ -32,6 +32,7 @@ router.post('/', (request, response) => {
   var location = request.body.location;
 
   if (!key) { return response.status(401).send({ error: 'Invalid or missing API key' }) }
+  if (!location) { return response.status(422).send({ error: "Missing required 'location' property"}) };
 
   findUser(key)
   .then(user => {
@@ -73,7 +74,7 @@ router.delete('/', (request, response) => {
           .then(response.status(204).send())
           .catch(error => response.status(500).send({ error }))
         } else {
-          response.status(401).send({ error: 'Invalid or missing API key' })
+          response.status(400).send({ error: `<${location}> not found in your favorites` })
         }
       })
     } else {
