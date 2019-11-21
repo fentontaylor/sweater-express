@@ -1,8 +1,9 @@
 class Forecast {
   constructor(city, forecast) {
     this.location = city;
-    this.current_weather = this.currently(forecast);
-    this.daily = 
+    this.currentWeather = this.currently(forecast.currently);
+    this.daily = this.dailyForecast(forecast.daily);
+    this.hourly = this.hourlyForecast(forecast.hourly);
   }
 
   currently(fc) {
@@ -19,6 +20,22 @@ class Forecast {
       windBearing: fc.windBearing,
       cloudCover: fc.cloudCover,
       visibility: fc.visibility
+    }
+  }
+
+  dailyForecast(fc) {
+    return {
+      summary: fc.summary,
+      icon: fc.icon,
+      data: fc.data.slice(0,7)
+    }
+  }
+
+  hourlyForecast(fc) {
+    return {
+      summary: fc.summary,
+      icon: fc.icon,
+      data: fc.data.slice(0,8)
     }
   }
 }
