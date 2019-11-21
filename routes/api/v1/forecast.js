@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const helpers = require('../../../helpers/asyncHelpers');
-const fetchGeolocation = helpers.fetchGeolocation;
 const fetchForecast = helpers.fetchForecast;
 const findUser = helpers.findUser;
 
