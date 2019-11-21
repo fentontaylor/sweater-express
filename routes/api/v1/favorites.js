@@ -5,11 +5,7 @@ const helpers = require('../../../helpers/asyncHelpers');
 const findUser = helpers.findUser;
 const findFavorite = helpers.findFavorite;
 const createFavorite = helpers.createFavorite;
-
-// Delete this after moving to asyncHelpers
-const environment = process.env.NODE_ENV || 'development';
-const configuration = require('../../../knexfile')[environment];
-const database = require('knex')(configuration);
+const deleteFavorite = helpers.deleteFavorite;
 
 router.get('/', (request, response) => {
   
@@ -57,10 +53,10 @@ router.delete('/', (request, response) => {
 
   findUser(key)
     .then(user => {
-      database('favorites').where({
-        user_id: user[0].id, location: location
-      }).del()
+      deleteFavorite(user, location)
         .then(response.status(204).send())
+        .catch(error => response.status(500).send({ error }))
     })
+    .catch(error => response.status(500).send({ error }))
 })
 module.exports = router;

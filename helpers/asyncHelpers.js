@@ -7,8 +7,7 @@ const fetch = require('node-fetch');
 
 async function findUser (apiKey) {
   try {
-    let user = await database('users').where('api_key', apiKey);
-    return user;
+    return await database('users').where('api_key', apiKey);
   } catch (e) {
     return e;
   }
@@ -16,9 +15,8 @@ async function findUser (apiKey) {
 
 async function findFavorite (user, location) {
   try {
-    let favorite = await database('favorites')
-      .where({ user_id: user[0].id, location: location })
-    return favorite;
+    return await database('favorites')
+      .where({ user_id: user[0].id, location: location });
   } catch (e) {
     return e;
   }
@@ -29,6 +27,15 @@ async function createFavorite (user, location) {
     let newFavorite = await database('favorites')
       .insert({ user_id: user[0].id, location: location })
     return newFavorite;
+  } catch (e) {
+    return e;
+  }
+}
+
+async function deleteFavorite(user, location) {
+  try {
+    return await database('favorites')
+      .where({ user_id: user[0].id, location: location }).del();
   } catch (e) {
     return e;
   }
@@ -67,5 +74,6 @@ module.exports = {
   findFavorite: findFavorite,
   createFavorite: createFavorite,
   fetchGeolocation: fetchGeolocation,
-  fetchForecast: fetchForecast
+  fetchForecast: fetchForecast,
+  deleteFavorite: deleteFavorite
 }
