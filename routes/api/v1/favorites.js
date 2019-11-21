@@ -5,6 +5,7 @@ const helpers = require('../../../helpers/asyncHelpers');
 const findUser = helpers.findUser;
 const findFavorite = helpers.findFavorite;
 const createFavorite = helpers.createFavorite;
+const deleteFavorite = helpers.deleteFavorite;
 
 router.get('/', (request, response) => {
   
@@ -42,4 +43,20 @@ router.post('/', (request, response) => {
     });
 });
 
+router.delete('/', (request, response) => {
+  var body = request.body;
+  var location = body.location;
+  var key = body.api_key;
+
+  if (!key) { return response.status(401).send({ error: 'Invalid or missing API key' }) };
+  if (!location) { return response.status(422).send({ error: "Missing required 'location' property"}) };
+
+  findUser(key)
+    .then(user => {
+      deleteFavorite(user, location)
+        .then(response.status(204).send())
+        .catch(error => response.status(500).send({ error }))
+    })
+    .catch(error => response.status(500).send({ error }))
+})
 module.exports = router;
