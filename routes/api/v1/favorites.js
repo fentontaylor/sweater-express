@@ -7,8 +7,6 @@ const findFavorite = helpers.findFavorite;
 const createFavorite = helpers.createFavorite;
 const deleteFavorite = helpers.deleteFavorite;
 const fetchFavoriteForecasts = helpers.fetchFavoriteForecasts;
-// const userFavoriteCities = helpers.userFavoriteCities;
-// const fetchForecast = helpers.fetchForecast;
 
 router.get('/', (request, response) => {
   var key = request.body.api_key
