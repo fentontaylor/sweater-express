@@ -20,7 +20,8 @@ router.get('/', (request, response) => {
     .then(user => {
       if(user.length) {
         fetchFavoriteForecasts(user)
-        
+          .then(forecasts => response.status(200).send(forecasts))
+          .catch(error => response.status(500).send({ error }));
       } else {
         response.status(401).send({ error: 'Invalid or missing API key' })
       };

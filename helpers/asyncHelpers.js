@@ -87,9 +87,12 @@ async function _asyncForEach(array, callback) {
 async function fetchFavoriteForecasts(user) {
   try {
     var cities = await userFavoriteCities(user);
+    var forecasts = [];
     await _asyncForEach(cities, async (city) => {
-      console.log(fetchForecast(city))
-    })
+      let fc = await fetchForecast(city)
+      forecasts.push(fc)
+    });
+    return forecasts;
   } catch (e) {
     return e;
   }
