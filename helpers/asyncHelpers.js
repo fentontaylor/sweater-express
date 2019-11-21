@@ -4,6 +4,7 @@ const environment = process.env.NODE_ENV || 'development';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 const fetch = require('node-fetch');
+const favForecast = require('../models/favForecast')
 
 async function findUser (apiKey) {
   try {
@@ -90,7 +91,8 @@ async function fetchFavoriteForecasts(user) {
     var forecasts = [];
     await _asyncForEach(cities, async (city) => {
       let fc = await fetchForecast(city)
-      forecasts.push(fc)
+      let fav = new favForecast(city, fc)
+      forecasts.push(fav)
     });
     return forecasts;
   } catch (e) {
