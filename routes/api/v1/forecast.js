@@ -20,13 +20,9 @@ router.get('/', (request, response) => {
             .then(forecast => {
               response.status(200).send(forecast)
             })
-            .catch((error) => {
-              response.status(500).send({ error });
-            });
+            .catch((error) => response.status(500).send({ error }));
         })
-        .catch((error) => {
-          response.status(500).send({ error });
-        });
+        .catch((error) => response.status(500).send({ error }));
     } else {
       response.status(401).send({ error: 'Invalid or missing API key' })
     }
