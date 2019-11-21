@@ -1,10 +1,11 @@
-class FavForecast {
+class Forecast {
   constructor(city, forecast) {
-    this.location = city,
-    this.currentWeather = this.format(forecast.currently)
+    this.location = city;
+    this.current_weather = this.currently(forecast);
+    this.daily = 
   }
 
-  format(fc) {
+  currently(fc) {
     return {
       summary: fc.summary,
       icon: fc.icon,
@@ -22,5 +23,4 @@ class FavForecast {
   }
 }
 
-module.exports = FavForecast;
-
+module.exports = Forecast;
