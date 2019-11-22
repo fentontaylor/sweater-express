@@ -74,7 +74,7 @@ router.delete('/', (request, response) => {
           .then(response.status(204).send())
           .catch(error => response.status(500).send({ error }))
         } else {
-          response.status(400).send({ error: `<${location}> not found in your favorites` })
+          response.status(404).send({ error: `<${location}> not found in your favorites` })
         }
       })
     } else {
